@@ -105,7 +105,7 @@ fi
 
 %post server
 if [ ! -f %{_sysconfdir}/jnbackup/server/identity ]; then
-	ssh-keygen -t dsa -N "" -C "backups@`hostname`" -f %{_sysconfdir}/jnbackup/server/identity
+	ssh-keygen -t rsa1 -N "" -C "backups@`hostname`" -f %{_sysconfdir}/jnbackup/server/identity
 	chown backups:backups %{_sysconfdir}/jnbackup/server/identity*
 	chmod 600 %{_sysconfdir}/jnbackup/server/identity
 fi
