@@ -4,7 +4,7 @@ Name:		jnbackup
 Version:	0.5
 Release:	1
 License:	GPL
-Buildarch:  	noarch
+Buildarch:	noarch
 Group:		Applications/Archiving
 Vendor:		Jacek Konieczny <jajcus@pld.org.pl>
 Source0:	%{name}-%{version}.tar.gz
@@ -29,11 +29,11 @@ Requires:	crondaemon
 %description server
 Server of Jajcus' Net Backup - remote backup system.
 
-%description -l pl server
+%description server -l pl
 Serwer Jajcys' Net Backup - system zdalnych backup'ów.
 
 %package client
-Summary:	Jajcus' Net Backup server - remote backup system - client 
+Summary:	Jajcus' Net Backup server - remote backup system - client
 Summary(pl):	Jajcus' Net Backup - system zdalnych backup'ów - klient
 Group:		Applications/Archiving
 Requires:	openssh-server
@@ -45,14 +45,14 @@ Prereq:		sudo
 %description client
 Client of Jajcus' Net Backup - remote backup system.
 
-%description -l pl client
+%description client -l pl
 Klient Jajcus' Net Backup - system zdalnych backup'ów.
 
 %prep
 %setup  -q
 
 %build
-%configure 
+%configure
 %{__make}
 
 %install
@@ -65,7 +65,7 @@ echo "# you should put your servers' public ssh key here" > $RPM_BUILD_ROOT%{_sy
 install -d $RPM_BUILD_ROOT/etc/cron.d/
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.d/backups
 
-gzip -9nf README ChangeLog 
+gzip -9nf README ChangeLog
 
 %pre client
 if [ "$1" = 1 ]; then
