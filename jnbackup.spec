@@ -1,7 +1,7 @@
 Summary:	Jajcus' Net Backup - remote backup system
 Summary(pl):	Jajcus' Net Backup - system zdalnych backup'ów
 Name:		jnbackup
-Version:	0.5
+Version:	0.6
 Release:	1
 License:	GPL
 Buildarch:	noarch
@@ -89,7 +89,7 @@ fi
 
 %post server
 if [ ! -f %{_sysconfdir}/jnbackup/server/identity ] ; then
-ssh-keygen -N "" -C "backups@`hostname`" -f %{_sysconfdir}/jnbackup/server/identity
+ssh-keygen -t dss -N "" -C "backups@`hostname`" -f %{_sysconfdir}/jnbackup/server/identity
 chown backups.backups %{_sysconfdir}/jnbackup/server/identity*
 chmod 600 %{_sysconfdir}/jnbackup/server/identity
 fi
