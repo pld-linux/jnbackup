@@ -7,6 +7,7 @@ License:	GPL
 Vendor:		Jacek Konieczny <jajcus@pld.org.pl>
 Group:		Applications/Archiving
 Source0:	%{name}-%{version}.tar.gz
+# Source0-md5:	aa21a7cad3e15e379c52be25d37ebabe
 Source1:	%{name}.crontab
 Buildarch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
