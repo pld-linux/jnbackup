@@ -4,6 +4,7 @@ Name:		jnbackup
 Version:	0.1
 Release:	1
 License:	GPL
+Buildarch:  	noarch
 Group:		Applications/Archiving
 Group(de):	Applikationen/Archivierung
 Group(pl):	Aplikacje/Archiwizacja
