@@ -98,8 +98,8 @@ fi
 
 %pre server
 if [ "$1" = 1 ]; then
-	getgid backups >/dev/null 2>&1 || %{_sbindir}/groupadd -r -g 41 -f backups
-	id -u backups >/dev/null 2>&1 || %{_sbindir}/useradd -r -g backups -u 41 \
+	getgid backups >/dev/null 2>&1 || /usr/sbin/groupadd -r -g 41 -f backups
+	id -u backups >/dev/null 2>&1 || /usr/sbin/useradd -r -g backups -u 41 \
 		-c "JNBackup client" -d /var/lib/%{name}/server backups
 fi
 
