@@ -57,15 +57,13 @@ Klient Jajcus' Net Backup - system zdalnych backup'ów.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/etc/cron.d/
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
 echo "# you should put your servers' public ssh key here" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/client/authorized_keys
 
-install -d $RPM_BUILD_ROOT/etc/cron.d/
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.d/backups
-
-gzip -9nf README ChangeLog
 
 %pre client
 if [ "$1" = 1 ]; then
@@ -101,7 +99,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files server
 %defattr(644,root,root,755)
-%doc *.gz
+%doc README ChangeLog
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/backups
 %{_datadir}/%{name}/server
@@ -117,7 +115,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files client
 %defattr(644,root,root,755)
-%doc *.gz
+%doc README ChangeLog
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/backupc
 %dir %{_datadir}/%{name}/client
