@@ -22,10 +22,10 @@ Jajcus' Net Backup - system zdalnych kopii zapasowych.
 Summary:	Jajcus' Net Backup server - remote backup system - server
 Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - serwer
 Group:		Applications/Archiving
-Requires(pre): /usr/bin/getgid
-Requires(pre): /bin/id
-Requires(pre): /usr/sbin/groupadd
-Requires(pre): /usr/sbin/useradd
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
 Requires(post):	/bin/hostname
 Requires(post):	fileutils
 Requires(post):	openssh
@@ -43,10 +43,10 @@ Serwer Jajcus' Net Backup - systemu zdalnych kopii zapasowych.
 Summary:	Jajcus' Net Backup server - remote backup system - client
 Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - klient
 Group:		Applications/Archiving
-Requires(pre): /usr/bin/getgid
-Requires(pre): /bin/id
-Requires(pre): /usr/sbin/groupadd
-Requires(pre): /usr/sbin/useradd
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
 Requires(post):	grep
 Requires(post):	sudo
 Requires:	awk
@@ -83,14 +83,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre client
 if [ "$1" = 1 ]; then
-       getgid backupc >/dev/null 2>&1 || /usr/sbin/groupadd -r -g 42 -f backupc
-       id -u backupc >/dev/null 2>&1 || /usr/sbin/useradd -r -g backupc -u 42 \
-               -c "JNBackup client" -d /var/lib/%{name}/client -s %{_bindir}/backupc backupc
+	getgid backupc >/dev/null 2>&1 || /usr/sbin/groupadd -r -g 42 -f backupc
+	id -u backupc >/dev/null 2>&1 || /usr/sbin/useradd -r -g backupc -u 42 \
+		-c "JNBackup client" -d /var/lib/%{name}/client -s %{_bindir}/backupc backupc
 fi
 
 %post client
 if [ "$1" = 1 ]; then
-	if ! grep -q "backupc" %{_sysconfdir}/sudoers ; then
+	if ! grep -q "backupc" %{_sysconfdir}/sudoers; then
 		echo 'backupc ALL=(ALL) NOPASSWD: %{_datadir}/jnbackup/client/backupc-slave' >> %{_sysconfdir}/sudoers
 		echo "Notice: %{_sysconfdir}/sudoers file changed"
 	fi
@@ -98,16 +98,16 @@ fi
 
 %pre server
 if [ "$1" = 1 ]; then
-       getgid backups >/dev/null 2>&1 || %{_sbindir}/groupadd -r -g 41 -f backups
-       id -u backups >/dev/null 2>&1 || %{_sbindir}/useradd -r -g backups -u 41 \
-               -c "JNBackup client" -d /var/lib/%{name}/server backups
+	getgid backups >/dev/null 2>&1 || %{_sbindir}/groupadd -r -g 41 -f backups
+	id -u backups >/dev/null 2>&1 || %{_sbindir}/useradd -r -g backups -u 41 \
+		-c "JNBackup client" -d /var/lib/%{name}/server backups
 fi
 
 %post server
-if [ ! -f %{_sysconfdir}/jnbackup/server/identity ] ; then
-ssh-keygen -t dsa -N "" -C "backups@`hostname`" -f %{_sysconfdir}/jnbackup/server/identity
-chown backups:backups %{_sysconfdir}/jnbackup/server/identity*
-chmod 600 %{_sysconfdir}/jnbackup/server/identity
+if [ ! -f %{_sysconfdir}/jnbackup/server/identity ]; then
+	ssh-keygen -t dsa -N "" -C "backups@`hostname`" -f %{_sysconfdir}/jnbackup/server/identity
+	chown backups:backups %{_sysconfdir}/jnbackup/server/identity*
+	chmod 600 %{_sysconfdir}/jnbackup/server/identity
 fi
 
 %files server
