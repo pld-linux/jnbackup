@@ -1,52 +1,63 @@
 Summary:	Jajcus' Net Backup - remote backup system
-Summary(pl):	Jajcus' Net Backup - system zdalnych backup'ów
+Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych
 Name:		jnbackup
 Version:	0.5
 Release:	3
 License:	GPL
-Buildarch:	noarch
-Group:		Applications/Archiving
 Vendor:		Jacek Konieczny <jajcus@pld.org.pl>
+Group:		Applications/Archiving
 Source0:	%{name}-%{version}.tar.gz
 Source1:	%{name}.crontab
+Buildarch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 Jajcus' Net Backup - remote backup system.
 
 %description -l pl
-Jajcys' Net Backup - system zdalnych backup'ów.
+Jajcus' Net Backup - system zdalnych kopii zapasowych.
 
 %package server
 Summary:	Jajcus' Net Backup server - remote backup system - server
-Summary(pl):	Jajcus' Net Backup - system zdalnych backup'ów - serwer
+Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - serwer
 Group:		Applications/Archiving
-Prereq:		openssh
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(post):	/bin/hostname
+Requires(post):	fileutils
+Requires(post):	openssh
+Requires:	crondaemon
 Requires:	openssh-clients
 Requires:	time
-Requires:	crondaemon
 
 %description server
 Server of Jajcus' Net Backup - remote backup system.
 
 %description server -l pl
-Serwer Jajcys' Net Backup - system zdalnych backup'ów.
+Serwer Jajcus' Net Backup - systemu zdalnych kopii zapasowych.
 
 %package client
 Summary:	Jajcus' Net Backup server - remote backup system - client
-Summary(pl):	Jajcus' Net Backup - system zdalnych backup'ów - klient
+Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - klient
 Group:		Applications/Archiving
-Requires:	openssh-server
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires(post):	grep
+Requires(post):	sudo
 Requires:	awk
+Requires:	openssh-server
 Requires:	sudo
 Requires:	tar
-Prereq:		sudo
 
 %description client
 Client of Jajcus' Net Backup - remote backup system.
 
 %description client -l pl
-Klient Jajcus' Net Backup - system zdalnych backup'ów.
+Klient Jajcus' Net Backup - systemu zdalnych kopii zapasowych.
 
 %prep
 %setup  -q
@@ -57,7 +68,7 @@ Klient Jajcus' Net Backup - system zdalnych backup'ów.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/cron.d/
+install -d $RPM_BUILD_ROOT/etc/cron.d
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
@@ -65,10 +76,13 @@ echo "# you should put your servers' public ssh key here" > $RPM_BUILD_ROOT%{_sy
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.d/backups
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %pre client
 if [ "$1" = 1 ]; then
-	getgid backupc >/dev/null 2>&1 || %{_sbindir}/groupadd -r -g 42 -f backupc
-	id -u backupc >/dev/null 2>&1 || %{_sbindir}/useradd -r -g backupc -u 42 \
+	getgid backupc >/dev/null 2>&1 || /usr/sbin/groupadd -r -g 42 -f backupc
+	id -u backupc >/dev/null 2>&1 || /usr/sbin/useradd -r -g backupc -u 42 \
 		-c "JNBackup client" -d /var/lib/%{name}/client -s %{_bindir}/backupc backupc
 fi
 
@@ -94,13 +108,9 @@ chown backups.backups %{_sysconfdir}/jnbackup/server/identity*
 chmod 600 %{_sysconfdir}/jnbackup/server/identity
 fi
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files server
 %defattr(644,root,root,755)
 %doc README ChangeLog
-%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/backups
 %{_datadir}/%{name}/server
 %attr(750,backups,backups) %dir /var/lib/%{name}/server
@@ -112,11 +122,14 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/%{name}/server/profiles
 %config(noreplace) %verify(not md5 size mtime) %attr(640,root,backups) %{_sysconfdir}/%{name}/server/config
 %config(noreplace) %verify(not md5 size mtime) %attr(640,root,backups) %{_sysconfdir}/%{name}/server/profiles/*
+# common dirs?
+%dir %{_datadir}/%{name}
+%dir /var/lib/%{name}
+%dir %{_sysconfdir}/%{name}
 
 %files client
 %defattr(644,root,root,755)
 %doc README ChangeLog
-%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/backupc
 %dir %{_datadir}/%{name}/client
 %{_datadir}/%{name}/client/*.tool
@@ -130,3 +143,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/%{name}/client/backups
 %config(noreplace) %verify(not md5 size mtime) %attr(640,root,backupc) %{_sysconfdir}/%{name}/client/authorized_keys
 %config(noreplace) %verify(not md5 size mtime) %attr(640,root,backupc) %{_sysconfdir}/%{name}/client/backups/*
+# common dirs?
+%dir %{_datadir}/%{name}
+%dir /var/lib/%{name}
+%dir %{_sysconfdir}/%{name}
