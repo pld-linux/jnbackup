@@ -1,0 +1,7 @@
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+NICE=15
+
+05 04 * * 0	backups	/usr/bin/backups backup full 
+05 04 * * 1-6 	backups /usr/bin/backups backup incremental
