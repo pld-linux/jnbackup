@@ -9,6 +9,7 @@ Group:		Applications/Archiving
 Source0:	%{name}-%{version}.tar.gz
 # Source0-md5:	aa21a7cad3e15e379c52be25d37ebabe
 Source1:	%{name}.crontab
+BuildRequires:	rpmbuild(macros) >= 1.159
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -22,16 +23,20 @@ Jajcus' Net Backup - system zdalnych kopii zapasowych.
 Summary:	Jajcus' Net Backup server - remote backup system - server
 Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - serwer
 Group:		Applications/Archiving
-Requires(pre):	/usr/bin/getgid
 Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(post):	/bin/hostname
 Requires(post):	fileutils
 Requires(post):	openssh
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires:	crondaemon
 Requires:	openssh-clients
 Requires:	time
+Provides:	group(backups)
+Provides:	user(backups)
 
 %description server
 Server of Jajcus' Net Backup - remote backup system.
@@ -43,16 +48,20 @@ Serwer Jajcus' Net Backup - systemu zdalnych kopii zapasowych.
 Summary:	Jajcus' Net Backup server - remote backup system - client
 Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - klient
 Group:		Applications/Archiving
-Requires(pre):	/usr/bin/getgid
 Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires(post):	grep
 Requires(post):	sudo
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
 Requires:	awk
 Requires:	openssh-server
 Requires:	sudo
 Requires:	tar
+Provides:	group(backupc)
+Provides:	user(backupc)
 
 %description client
 Client of Jajcus' Net Backup - remote backup system.
@@ -82,10 +91,21 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.d/backups
 rm -rf $RPM_BUILD_ROOT
 
 %pre client
-if [ "$1" = 1 ]; then
-	getgid backupc >/dev/null 2>&1 || /usr/sbin/groupadd -r -g 42 -f backupc
-	id -u backupc >/dev/null 2>&1 || /usr/sbin/useradd -r -g backupc -u 42 \
-		-c "JNBackup client" -d /var/lib/%{name}/client -s %{_bindir}/backupc backupc
+if [ -n "`/usr/bin/getgid backupc`" ]; then
+	if [ "`/usr/bin/getgid backupc`" != "105" ]; then
+		echo "Error: group backupc doesn't have gid=105. Correct this before installing %{name}." 1>&2
+		exit 1
+	fi
+else
+	/usr/sbin/groupadd -g 105 backupc
+fi
+if [ -n "`/bin/id -u backupc 2>/dev/null`" ]; then
+	if [ "`/bin/id -u backupc`" != "105" ]; then
+		echo "Error: user backupc doesn't have uid=105. Correct this before installing %{name}." 1>&2
+		exit 1
+	fi
+else
+	/usr/sbin/useradd -g backupc -u 105 -c "JNBackup client" -d /var/lib/%{name}/client -s %{_bindir}/backupc backupc
 fi
 
 %post client
@@ -96,11 +116,28 @@ if [ "$1" = 1 ]; then
 	fi
 fi
 
+%postun client
+if [ "$1" = "0" ]; then
+	%userremove backupc
+	%groupremove backupc
+fi
+
 %pre server
-if [ "$1" = 1 ]; then
-	getgid backups >/dev/null 2>&1 || /usr/sbin/groupadd -r -g 41 -f backups
-	id -u backups >/dev/null 2>&1 || /usr/sbin/useradd -r -g backups -u 41 \
-		-c "JNBackup client" -d /var/lib/%{name}/server backups
+if [ -n "`/usr/bin/getgid backups`" ]; then
+	if [ "`/usr/bin/getgid backups`" != "113" ]; then
+		echo "Error: group backups doesn't have gid=113. Correct this before installing %{name}." 1>&2
+		exit 1
+	fi
+else
+	/usr/sbin/groupadd -g 113 backups
+fi
+if [ -n "`/bin/id -u backups 2>/dev/null`" ]; then
+	if [ "`/bin/id -u backups`" != "113" ]; then
+		echo "Error: user backups doesn't have uid=113. Correct this before installing %{name}." 1>&2
+		exit 1
+	fi
+else
+	/usr/sbin/useradd -g backups -u 113 -c "JNBackup client" -d /var/lib/%{name}/server backups
 fi
 
 %post server
@@ -108,6 +145,12 @@ if [ ! -f %{_sysconfdir}/jnbackup/server/identity ]; then
 	ssh-keygen -t rsa1 -N "" -C "backups@`hostname`" -f %{_sysconfdir}/jnbackup/server/identity
 	chown backups:backups %{_sysconfdir}/jnbackup/server/identity*
 	chmod 600 %{_sysconfdir}/jnbackup/server/identity
+fi
+
+%postun server
+if [ "$1" = "0" ]; then
+	%userremove backups
+	%groupremove backups
 fi
 
 %files server
