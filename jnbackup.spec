@@ -71,7 +71,8 @@ Klient Jajcus' Net Backup - systemu zdalnych kopii zapasowych.
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/etc/cron.d
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 echo "# you should put your servers' public ssh key here" > $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/client/authorized_keys
 
@@ -105,7 +106,7 @@ fi
 %post server
 if [ ! -f %{_sysconfdir}/jnbackup/server/identity ] ; then
 ssh-keygen -t dsa -N "" -C "backups@`hostname`" -f %{_sysconfdir}/jnbackup/server/identity
-chown backups.backups %{_sysconfdir}/jnbackup/server/identity*
+chown backups:backups %{_sysconfdir}/jnbackup/server/identity*
 chmod 600 %{_sysconfdir}/jnbackup/server/identity
 fi
 
