@@ -1,7 +1,7 @@
 Summary:	Jajcus' Net Backup - remote backup system
 Summary(pl):	Jajcus' Net Backup - system zdalnych backup'ów
 Name:		jnbackup
-Version:	0.1
+Version:	0.2
 Release:	1
 License:	GPL
 Buildarch:  	noarch
@@ -80,8 +80,12 @@ if [ "$1" = 1 ]; then
 fi
 
 %post client
-echo 'backupc ALL=(ALL) NOPASSWD: %{_datadir}/jnbackup/client/backupc-slave' >> %{_sysconfdir}/sudoers
-echo "Notice: %{_sysconfdir}/sudoers file changed"
+if [ "$1" = 1 ]; then
+	if ! grep -q "backupc" %{_sysconfdir}/sudoers ; then
+		echo 'backupc ALL=(ALL) NOPASSWD: %{_datadir}/jnbackup/client/backupc-slave' >> %{_sysconfdir}/sudoers
+		echo "Notice: %{_sysconfdir}/sudoers file changed"
+	fi
+fi
 
 %pre server
 if [ "$1" = 1 ]; then
