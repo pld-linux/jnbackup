@@ -6,8 +6,6 @@ Release:	1
 License:	GPL
 Buildarch:  	noarch
 Group:		Applications/Archiving
-Group(de):	Applikationen/Archivierung
-Group(pl):	Aplikacje/Archiwizacja
 Vendor:		Jacek Konieczny <jajcus@pld.org.pl>
 Source0:	%{name}-%{version}.tar.gz
 Source1:	%{name}.crontab
@@ -23,8 +21,6 @@ Jajcys' Net Backup - system zdalnych backup'ów.
 Summary:	Jajcus' Net Backup server - remote backup system - server
 Summary(pl):	Jajcus' Net Backup - system zdalnych backup'ów - serwer
 Group:		Applications/Archiving
-Group(de):	Applikationen/Archivierung
-Group(pl):	Aplikacje/Archiwizacja
 Prereq:		openssh
 Requires:	openssh-clients
 Requires:	time
@@ -40,8 +36,6 @@ Serwer Jajcys' Net Backup - system zdalnych backup'ów.
 Summary:	Jajcus' Net Backup server - remote backup system - client 
 Summary(pl):	Jajcus' Net Backup - system zdalnych backup'ów - klient
 Group:		Applications/Archiving
-Group(de):	Applikationen/Archivierung
-Group(pl):	Aplikacje/Archiwizacja
 Requires:	openssh-server
 Requires:	awk
 Requires:	sudo
