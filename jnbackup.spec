@@ -1,8 +1,8 @@
 Summary:	Jajcus' Net Backup - remote backup system
 Summary(pl):	Jajcus' Net Backup - system zdalnych backup'ów
 Name:		jnbackup
-Version:	0.6
-Release:	1
+Version:	0.5
+Release:	2
 License:	GPL
 Buildarch:	noarch
 Group:		Applications/Archiving
