@@ -28,6 +28,7 @@ Group(pl):	Aplikacje/Archiwizacja
 Prereq:		openssh
 Requires:	openssh-clients
 Requires:	time
+Requires:	crondaemon
 
 %description server
 Server of Jajcus' Net Backup - remote backup system.
