@@ -1,0 +1,2 @@
+- Version: 0.2
+- %post client fixed, so it doesn't add line to /etc/sudoers on each upgrade
