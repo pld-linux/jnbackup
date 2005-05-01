@@ -9,7 +9,7 @@ Group:		Applications/Archiving
 Source0:	%{name}-%{version}.tar.gz
 # Source0-md5:	aa21a7cad3e15e379c52be25d37ebabe
 Source1:	%{name}.crontab
-BuildRequires:	rpmbuild(macros) >= 1.159
+BuildRequires:	rpmbuild(macros) >= 1.202
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -91,22 +91,8 @@ install %{SOURCE1} $RPM_BUILD_ROOT/etc/cron.d/backups
 rm -rf $RPM_BUILD_ROOT
 
 %pre client
-if [ -n "`/usr/bin/getgid backupc`" ]; then
-	if [ "`/usr/bin/getgid backupc`" != "105" ]; then
-		echo "Error: group backupc doesn't have gid=105. Correct this before installing %{name}." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/groupadd -g 105 backupc
-fi
-if [ -n "`/bin/id -u backupc 2>/dev/null`" ]; then
-	if [ "`/bin/id -u backupc`" != "105" ]; then
-		echo "Error: user backupc doesn't have uid=105. Correct this before installing %{name}." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/useradd -g backupc -u 105 -c "JNBackup client" -d /var/lib/%{name}/client -s %{_bindir}/backupc backupc
-fi
+%groupadd -g 105 backupc
+%useradd -g backupc -u 105 -c "JNBackup client" -d /var/lib/%{name}/client -s %{_bindir}/backupc backupc
 
 %post client
 if [ "$1" = 1 ]; then
@@ -123,22 +109,8 @@ if [ "$1" = "0" ]; then
 fi
 
 %pre server
-if [ -n "`/usr/bin/getgid backups`" ]; then
-	if [ "`/usr/bin/getgid backups`" != "113" ]; then
-		echo "Error: group backups doesn't have gid=113. Correct this before installing %{name}." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/groupadd -g 113 backups
-fi
-if [ -n "`/bin/id -u backups 2>/dev/null`" ]; then
-	if [ "`/bin/id -u backups`" != "113" ]; then
-		echo "Error: user backups doesn't have uid=113. Correct this before installing %{name}." 1>&2
-		exit 1
-	fi
-else
-	/usr/sbin/useradd -g backups -u 113 -c "JNBackup client" -d /var/lib/%{name}/server backups
-fi
+%groupadd -g 113 backups
+%useradd -g backups -u 113 -c "JNBackup client" -d /var/lib/%{name}/server backups
 
 %post server
 if [ ! -f %{_sysconfdir}/jnbackup/server/identity ]; then
