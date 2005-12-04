@@ -23,15 +23,15 @@ Jajcus' Net Backup - system zdalnych kopii zapasowych.
 Summary:	Jajcus' Net Backup server - remote backup system - server
 Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - serwer
 Group:		Applications/Archiving
-Requires(pre):	/bin/id
-Requires(pre):	/usr/bin/getgid
-Requires(pre):	/usr/sbin/groupadd
-Requires(pre):	/usr/sbin/useradd
 Requires(post):	/bin/hostname
 Requires(post):	fileutils
 Requires(post):	openssh
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
 Requires:	crondaemon
 Requires:	openssh-clients
 Requires:	time
@@ -48,14 +48,14 @@ Serwer Jajcus' Net Backup - systemu zdalnych kopii zapasowych.
 Summary:	Jajcus' Net Backup server - remote backup system - client
 Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - klient
 Group:		Applications/Archiving
-Requires(pre):	/bin/id
-Requires(pre):	/usr/bin/getgid
-Requires(pre):	/usr/sbin/groupadd
-Requires(pre):	/usr/sbin/useradd
 Requires(post):	grep
 Requires(post):	sudo
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
 Requires:	awk
 Requires:	openssh-server
 Requires:	sudo
@@ -134,11 +134,11 @@ fi
 %attr(750,backups,backups) %dir /var/lib/%{name}/server/.ssh
 %attr(750,backups,backups) %dir /var/lib/%{name}/server/backups
 /var/lib/%{name}/server/.ssh/*
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,root) /etc/cron.d/backups
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,root) /etc/cron.d/backups
 %dir %{_sysconfdir}/%{name}/server
 %dir %{_sysconfdir}/%{name}/server/profiles
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,backups) %{_sysconfdir}/%{name}/server/config
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,backups) %{_sysconfdir}/%{name}/server/profiles/*
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,backups) %{_sysconfdir}/%{name}/server/config
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,backups) %{_sysconfdir}/%{name}/server/profiles/*
 # common dirs?
 %dir %{_datadir}/%{name}
 %dir /var/lib/%{name}
@@ -158,8 +158,8 @@ fi
 /var/lib/%{name}/client/.ssh/*
 %dir %{_sysconfdir}/%{name}/client
 %dir %{_sysconfdir}/%{name}/client/backups
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,backupc) %{_sysconfdir}/%{name}/client/authorized_keys
-%config(noreplace) %verify(not md5 size mtime) %attr(640,root,backupc) %{_sysconfdir}/%{name}/client/backups/*
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,backupc) %{_sysconfdir}/%{name}/client/authorized_keys
+%config(noreplace) %verify(not md5 mtime size) %attr(640,root,backupc) %{_sysconfdir}/%{name}/client/backups/*
 # common dirs?
 %dir %{_datadir}/%{name}
 %dir /var/lib/%{name}
