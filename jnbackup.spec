@@ -1,5 +1,5 @@
 Summary:	Jajcus' Net Backup - remote backup system
-Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych
+Summary(pl.UTF-8):   Jajcus' Net Backup - system zdalnych kopii zapasowych
 Name:		jnbackup
 Version:	0.6
 Release:	3
@@ -15,12 +15,12 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 Jajcus' Net Backup - remote backup system.
 
-%description -l pl
+%description -l pl.UTF-8
 Jajcus' Net Backup - system zdalnych kopii zapasowych.
 
 %package server
 Summary:	Jajcus' Net Backup server - remote backup system - server
-Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - serwer
+Summary(pl.UTF-8):   Jajcus' Net Backup - system zdalnych kopii zapasowych - serwer
 Group:		Applications/Archiving
 Requires(post):	/bin/hostname
 Requires(post):	fileutils
@@ -40,12 +40,12 @@ Provides:	user(backups)
 %description server
 Server of Jajcus' Net Backup - remote backup system.
 
-%description server -l pl
+%description server -l pl.UTF-8
 Serwer Jajcus' Net Backup - systemu zdalnych kopii zapasowych.
 
 %package client
 Summary:	Jajcus' Net Backup server - remote backup system - client
-Summary(pl):	Jajcus' Net Backup - system zdalnych kopii zapasowych - klient
+Summary(pl.UTF-8):   Jajcus' Net Backup - system zdalnych kopii zapasowych - klient
 Group:		Applications/Archiving
 Requires(post):	grep
 Requires(post):	sudo
@@ -65,7 +65,7 @@ Provides:	user(backupc)
 %description client
 Client of Jajcus' Net Backup - remote backup system.
 
-%description client -l pl
+%description client -l pl.UTF-8
 Klient Jajcus' Net Backup - systemu zdalnych kopii zapasowych.
 
 %prep
